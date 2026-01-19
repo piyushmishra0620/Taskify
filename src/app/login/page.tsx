@@ -99,7 +99,7 @@ export default function Login() {
                 className={`mt-2 px-5 py-[10px] max-md:py-[8px] max-md:px-3 w-[500px] max-md:w-[295px] border ${passwordError===true?"border-red-600":passwordError===false?"border-green-500":"border-gray-400"} rounded-lg bg-black placeholder:font-serif font-serif`}
                 placeholder="Password*"
                 onBlur={passwordValidation}
-                value={password}
+                value={notView?:password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="off"
               />
