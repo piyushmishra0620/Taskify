@@ -15,6 +15,7 @@ declare global {
 
 if(!(global.users)){
     const userCollection = db.collection("users");
+    await userCollection.createIndex({email:1,password:1},{unique:true});
     global.users = userCollection;
 }
 
