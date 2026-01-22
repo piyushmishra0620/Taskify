@@ -1,5 +1,8 @@
+"use client";
+
 import {createContext,useContext,useReducer,useEffect} from "react";
 import {signup,login,getUser,logout} from "@/utils/authFunctions";
+import {NextRequest,NextResponse} from "next/server";
 
 interface User{
     name:string,
@@ -12,26 +15,59 @@ interface AuthContext{
     isAuthenticated:boolean
 }
 
-const AuthContext = createContext<AuthContext | undefined>(undefined);
+interface AuthContextType{
+    context:AuthContext,
+    register:(body:{username:string,email:string,password:string}) => Promise<any>,
+    signin:(body:{email:string,password:string}) => Promise<any>,
+    signOut: () => Promise<any>
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+type action= {type:"setUser";user:User|null} | {type:"setLoading",loading:boolean} | {type:"setIsAuthenticated",isAuthenticated:boolean};
+
+function reducer (context:AuthContext,Action:action){
+    switch(Action.type){
+        case "setUser":
+            return {...context,User:Action.user};
+        case "setLoading":
+            return {...context,loading:Action.loading};
+        case "setIsAuthenticated":
+            return {...context,isAuthenticated:Action.isAuthenticated};
+        default:
+            return context;            
+    }
+}
 
 export const AuthProvider = (props:{children:React.ReactNode})=>{
-    const [state,dispatch]=useReducer({User:null,loading:true,isAuthenticated:false});
+    const [context,dispatch]=useReducer(reducer,{User:null,loading:true,isAuthenticated:false});
+
     useEffect(()=>{
         const session = async ()=>{
-
         }
         session();
     },[]);
+
     const register = async (body:{username:string,email:string,password:string})=>{
         try{
             const response = await signup(body);
             if(response.data){
-
+                dispatch({type:"setUser",user:{name:response.data.name,email:response.data.email}});
+                dispatch({type:"setLoading",loading:false});
+                dispatch({type:"setIsAuthenticated",isAuthenticated:true});
+                return response.data;
             }else if(response.error){
-
+                if(response.error=="All fields are required"){
+                    return {message:"Bad request. All credentials required."}
+                }else if(response.error=="User already exists"){
+                    return {message:"Account already registered."}
+                }else{
+                    return {error:"Server side error occurred."}
+                }
             }
         }catch(err:any){
-
+            console.error(err);
+            return NextResponse.json({error:err.message},{status:500});
         }
     }
 
@@ -39,25 +75,47 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
         try{
             const response = await login(body);
             if(response.data){
-
+                dispatch({type:"setUser",user:{name:response.data.name,email:response.data.email}});
+                dispatch({type:"setLoading",loading:false});
+                dispatch({type:"setIsAuthenticated",isAuthenticated:true});
+                return response.data;
             }else if(response.error){
-
+                if(response.error=="All fields are required"){
+                    return {message:"Bad Request . All credentials are required."}
+                }else if(response.error=="User does not exist"){
+                    return {message:"Email not registered."}
+                }else if(response.error=="Invalid credentials"){
+                    return {message:"Incorrect Password"}
+                }else{
+                    return {error:"Server side error occurred."}
+                }
             }
         }catch(err:any){
-
+            console.error(err);
+            return NextResponse.json({error:err.message},{status:500});
         }
     }
 
     const signOut = async()=>{
         try{
             const response = await logout();
+            if(response.message=="Session deleted"){
+                dispatch({type:"setUser",user:null});
+                dispatch({type:"setLoading",loading:true});
+                dispatch({type:"setIsAuthenticated",isAuthenticated:false});
+                return {message:"Logout Successful"}
+            }
+            if(response.error){
+                return NextResponse.json({error:response.error},{status:500});
+            }
         }catch(err:any){
-
+            console.error(err);
+            return NextResponse.json({error:err.message},{status:500});
         }
     }
 
     return (
-        <AuthContext.Provider value={state,register,signin,signOut}>
+        <AuthContext.Provider value={{context,register,signin,signOut}}>
             {props.children}
         </AuthContext.Provider>
     )

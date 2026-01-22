@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
 import { signupSchema } from "@/schemas/signupSchema";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -9,7 +8,6 @@ export default function Signup() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [notview, setNotView] = useState<boolean>(true);
   const [nameError, setNameError] = useState<boolean | string>("");
   const [nameErr, setNameErr] = useState<string>("");
   const [emailError, setEmailError] = useState<boolean | string>("");
@@ -172,12 +170,6 @@ export default function Signup() {
                   </motion.p>
                 )}
               </AnimatePresence>
-              <div
-                className="absolute inset-y-[17px] md:inset-y-[19px] right-2 z-10 cursor-pointer"
-                onClick={() => setNotView(!notview)}
-              >
-                {notview ? <Eye /> : <EyeOff />}
-              </div>
             </div>
           </div>
           <div className="flex justify-start space-x-10 mt-[16px]">

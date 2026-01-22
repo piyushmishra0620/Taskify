@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import {Eye,EyeOff} from "lucide-react";
 import {loginSchema} from "@/schemas/loginSchema";
 import {motion,AnimatePresence} from "framer-motion";
 
@@ -13,7 +12,6 @@ export default function Login() {
   const [passwordError,setPasswordError]= useState<boolean | string>("");
   const [passwordErr,setPasswordErr] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [notview ,setNotView] = useState<boolean>(true);
 
   function emailValidation() {
     const res = loginSchema.shape.email.safeParse(email);
@@ -95,17 +93,14 @@ export default function Login() {
             <div className="relative w-fit h-fit">
               <input
                 id="password"
-                type={notview?"password":"text"}
+                type="password"
                 className={`mt-2 px-5 py-[10px] max-md:py-[8px] max-md:px-3 w-[500px] max-md:w-[295px] border ${passwordError===true?"border-red-600":passwordError===false?"border-green-500":"border-gray-400"} rounded-lg bg-black placeholder:font-serif font-serif`}
                 placeholder="Password*"
                 onBlur={passwordValidation}
-                value={notView?:password}
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="off"
               />
-              <div className="absolute inset-y-[17px] md:inset-y-[19px] right-2 z-10 cursor-pointer" onClick={()=>setNotView(!notview)}>
-                {notview?<Eye/>:<EyeOff/>}
-              </div>
             </div>
             <AnimatePresence>
               {(passwordError && passwordErr) && (
