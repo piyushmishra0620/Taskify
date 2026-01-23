@@ -2,7 +2,7 @@
 
 import {createContext,useContext,useReducer,useEffect} from "react";
 import {signup,login,getUser,logout} from "@/utils/authFunctions";
-import {NextRequest,NextResponse} from "next/server";
+import {NextResponse} from "next/server";
 
 interface User{
     name:string,
@@ -44,6 +44,12 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
 
     useEffect(()=>{
         const session = async ()=>{
+            const response = await getUser();
+            if(response.data){
+                dispatch({type:"setUser",user:{name:response.data.name,email:response.data.email}});
+                dispatch({type:"setLoading",loading:false});
+                dispatch({type:"setIsAuthenticated",isAuthenticated:true});
+            }
         }
         session();
     },[]);

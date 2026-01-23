@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   title: "Taskify",
   description:
     "Personal and Professional task management platform : Set tasks, map productivity and achieve goals.",
+  icons:{
+    icon:"./favicon.ico",
+    shortcut:"./favicon.ico",
+    apple:"/todo/public/apple-touch-icon.png"
+  } 
 };
 
 export default function RootLayout({

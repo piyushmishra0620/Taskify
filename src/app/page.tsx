@@ -5,6 +5,8 @@ import {Hero} from "@/components/Hero";
 import {Card} from "@/components/card";
 import Footer from "@/components/Footer";
 import {motion,AnimatePresence} from "framer-motion";
+import {} from "lucide-react";
+import {useAuth} from "@/app/contexts/authContext";
 
 export default function Home() {
   return (
