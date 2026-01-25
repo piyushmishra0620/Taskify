@@ -6,7 +6,7 @@ export function Hero() {
   const router = useRouter();
   return (
     <>
-      <div className="w-full flex justify-center">
+      <div className="w-full  flex justify-center">
         <div className="h-fit w-fit bg-linear-to-tr from-0% from-gray-50 via-55% via-gray-500 to-85% to-gray-50 bg-clip-text">
           <h1 className="text-[70px] md:text-[100px] font-extrabold text-center text-transparent cursor-default">
             TASKIFY
