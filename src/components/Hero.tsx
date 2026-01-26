@@ -20,10 +20,10 @@ export function Hero() {
         </p>
       </div>
       <div className="mt-7 flex space-x-4.5 md:space-x-7 justify-center h-fit">
-        <button className="px-4 md:px-5 py-3 md:py-4 bg-red-600 focus:bg-red-500 hover:bg-red-500 md:bg-[lab(44 76.83 71.8)] cursor-pointer text-gray-300 font-bold md:text-lg text-md border border-red-500 outline-2 outline-amber-50 outline-offset-3 rounded-lg" onClick={()=>{router.replace("/login",{scroll:true});router.prefetch("/signup");}}>
+        <button className="px-4 md:px-5 py-3 md:py-4 bg-red-600 focus:bg-red-500 hover:bg-red-500 md:bg-[lab(44 76.83 71.8)] cursor-pointer text-gray-300 font-bold md:text-lg text-md border border-red-500 outline-2 outline-amber-50 outline-offset-3 rounded-lg hover:-translate-y-1 ease-in duration-100" onClick={()=>{router.replace("/login",{scroll:true});router.prefetch("/signup");}}>
           Get Started &gt;
         </button>
-        <button className="px-4 py-3 md:px-5 md:py-4 bg-linear-to-br focus:bg-white hover:bg-gray-300/80 from-gray-300 via-gray-300/80 to-gray-300 cursor-pointer text-black font-bold text-md md:text-lg border border-amber-50 outline-2 outline-amber-50 outline-offset-3 rounded-lg">
+        <button className="px-4 py-3 md:px-5 md:py-4 bg-linear-to-br focus:bg-white hover:bg-gray-300/80 from-gray-300 via-gray-300/80 to-gray-300 cursor-pointer text-black font-bold text-md md:text-lg border border-amber-50 outline-2 outline-amber-50 outline-offset-3 rounded-lg hover:-translate-y-1 ease-in duration-100">
           Set Tasks For a Day
         </button>
       </div>

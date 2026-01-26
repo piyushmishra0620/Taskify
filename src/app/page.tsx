@@ -79,13 +79,13 @@ export default function Home() {
       <div className="w-full h-[1px] bg-linear-to-r from-neutral-400 via-red-600 to-neutral-400 "></div>
       <div className="mt-6 md:mt-9 w-full flex justify-center">
         <div className="w-fit h-fit bg-linear-to-tr bg-clip-text from-0% from-gray-50 via-55% via-gray-500 to-85% to-gray-50">
-          <h1 className="text-[26px] md:text-[50px] text-transparent text-center tracking-tighter font-extrabold cursor-default">Login to experience best features</h1>
+          <h1 className="text-[20px] [@media(min-width:781px)]:text-[35px] [@media(min-width:921px)]:text-[50px] text-transparent text-center tracking-tighter font-extrabold cursor-default">Login to experience best features</h1>
         </div>
       </div>
       <p className="mt-[9px] text-center text-[15.7px] tracking-tighter md:text-[24px] font-serif text-neutral-400">Join Thousands who get their schedule organised and planned!</p>
       <div className="flex justify-center gap-5 md:gap-8 mt-5">
-        <button className="px-12 md:px-25 py-1.5 md:py-4 outline-2 outline-white outline-offset-1 md:outline-offset-3 bg-red-500  md:bg-red-700 cursor-pointer text-black rounded-lg font-semibold text-[20px]">Signup</button>
-        <button className="px-12 md:px-25 py-1.5 md:py-4 outline-2 outline-white outline-offset-1 md:outline-offset-3 bg-red-500 md:bg-red-700 cursor-pointer text-black rounded-lg font-semibold text-[20px]">Signin</button>
+        <button className="px-12 md:px-25 py-1.5 md:py-4 outline-2 outline-white outline-offset-1 md:outline-offset-3 bg-red-500  md:bg-red-700 cursor-pointer text-black rounded-lg font-semibold text-[20px] hover:-translate-y-1 ease-in duration-100 hover:bg-neutral-900/60 hover:backdrop-blur-sm hover:text-white">Signup</button>
+        <button className="px-12 md:px-25 py-1.5 md:py-4 outline-2 outline-white outline-offset-1 md:outline-offset-3 bg-red-500 md:bg-red-700 cursor-pointer text-black rounded-lg font-semibold text-[20px] hover:-translate-y-1 hover:text-white hover:bg-neutral-900/60 hover:backdrop-blur-sm ease-in duration-100">Signin</button>
       </div>
       <div className="w-full h-[1px] bg-linear-to-r from-neutral-400 via-red-600 to-neutral-400 mt-12 md:mt-18 mb-3 md:mb-5"></div>
       <div className="w-full h-[1px] bg-linear-to-r from-neutral-400 via-red-600 to-neutral-400 mt-13 md:mt-20"></div>
