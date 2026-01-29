@@ -7,7 +7,7 @@ import {motion,AnimatePresence} from "framer-motion";
 
 export default function Navbar(){
     return(
-        <motion.div className="fixed top-0 left-0 z-50 flex items-center justify-between p-2 pb-3 min-w-screen bg-neutral-900" initial={{y:-15,opacity:0}} animate={{y:0,opacity:1}} transition={{duration:0.2,ease:"easeInOut"}}>
+        <motion.div className="fixed top-0 left-0 z-50 flex items-center justify-between p-2 pb-3 min-w-screen bg-neutral-900" initial={{y:-15,opacity:0}} animate={{y:0,opacity:1}} transition={{duration:0.2,ease:"easeIn"}}>
             <Link href="/"><div className="max-md:hidden w-fit h-fit bg-clip-text bg-linear-to-br from-10% from-gray-200 via-40% via-gray-500 to-80% to-gray-300"><p className="font-extrabold ml-4 text-transparent text-[30px] cursor-pointer">Taskify</p></div>
             <div className="md:hidden w-fit h-fit bg-clip-text bg-linear-to-br from-10% from-gray-300 via-40% via-gray-500 to-80% to-gray-300"><p className="font-extrabold ml-2 text-transparent text-[26px] cursor-pointer">Taskify</p></div>
             </Link>

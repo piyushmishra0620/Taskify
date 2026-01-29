@@ -5,6 +5,7 @@ export async function signup(body:{username:string,email:string,password:string}
         const response = await api.post("/auth/signup",body);
         return {data:response.data,status:response.status};
     }catch(err:any){
+        console.error(err);
         return {error:(err.response?.data.error || err.request?.message || err.message)}
     }
 }
@@ -14,6 +15,7 @@ export async function login(body:{email:string,password:string}){
         const response = await api.post("/auth/login",body);
         return {data:response.data,status:response.status};
     }catch(err:any){
+        console.error(err);
         return {error:(err.response?.data.error || err.request?.message || err.message)}
     }
 }
@@ -21,8 +23,12 @@ export async function login(body:{email:string,password:string}){
 export async function getUser(){
     try{
         const response = await api.get("/auth/getUser");
+        if(response.status==200){
+            return response.data;
+        }
     }catch(err:any){
-
+        console.error(err);
+        return {error:(err.response?.data.error || err.request?.message || err.message )}
     }
 }
 
@@ -30,8 +36,9 @@ export async function getUser(){
 export async function logout(){
     try{
         const response = await api.get("/auth/logout");
-        return response;
+        return response.data;
     }catch(err:any){
+        console.error(err);
         return {error:(err.request?.message || err.message)}
     }
 }
