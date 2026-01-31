@@ -17,12 +17,12 @@ interface AuthContext{
 
 interface AuthContextType{
     context:AuthContext,
-    register:(body:{username:string,email:string,password:string}) => Promise<any>,
+    register:(body:{name:string,email:string,password:string}) => Promise<any>,
     signin:(body:{email:string,password:string}) => Promise<any>,
     signOut: () => Promise<any>
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 type action= {type:"setUser";user:User|null} | {type:"setLoading",loading:boolean} | {type:"setIsAuthenticated",isAuthenticated:boolean};
 
@@ -54,7 +54,7 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
         session();
     },[]);
 
-    const register = async (body:{username:string,email:string,password:string})=>{
+    const register = async (body:{name:string,email:string,password:string})=>{
         try{
             const response = await signup(body);
             if(response.data){
@@ -112,7 +112,7 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
                 return {message:"Logout Successful"}
             }
             if(response.error){
-                return NextResponse.json({error:response.error},{status:500});
+                return NextResponse.json({error:response.error},{status:response.status});
             }
         }catch(err:any){
             console.error(err);
@@ -127,4 +127,4 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
     )
 }
 
-export const useAuth = ()=>useContext(AuthContext);
+export const useAuth = ()=>{const contexts=useContext(AuthContext);if(!contexts)throw new Error("useAuth hook should be used within an AuthProvider");return contexts;}

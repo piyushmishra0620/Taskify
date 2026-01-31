@@ -1,6 +1,6 @@
 import {api} from "@/lib/api";
 
-export async function signup(body:{username:string,email:string,password:string}){
+export async function signup(body:{name:string,email:string,password:string}){
     try{
         const response = await api.post("/auth/signup",body);
         return {data:response.data,status:response.status};
@@ -32,13 +32,12 @@ export async function getUser(){
     }
 }
 
-
 export async function logout(){
     try{
         const response = await api.get("/auth/logout");
         return response.data;
     }catch(err:any){
         console.error(err);
-        return {error:(err.request?.message || err.message)}
+        return {error:( err.response?.data.error || err.request?.message || err.message),status:(err.response?.data.status || err.request?.status || err.status)}
     }
 }

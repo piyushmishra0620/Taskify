@@ -6,10 +6,12 @@ import {motion,AnimatePresence} from "framer-motion";
 import {gsap} from "gsap";
 import {SplitText} from "gsap/SplitText";
 import {useGSAP} from "@gsap/react";
+import {useAuth} from "@/app/contexts/authContext";
 
 gsap.registerPlugin(SplitText);
 
 export function Hero() {
+  const {context} = useAuth();
   const router = useRouter();
   const paragraphContainer = useRef(null);
   const paragraphRef = useRef(null);
@@ -58,19 +60,34 @@ export function Hero() {
           variants={childVariants}
           className="px-4 md:px-5 py-3 md:py-4 bg-red-600 focus:bg-red-500 hover:bg-red-500 md:bg-[lab(44 76.83 71.8)] cursor-pointer text-gray-300 font-bold md:text-lg text-md border border-red-500 outline-2 outline-amber-50 outline-offset-3 rounded-lg hover:-translate-y-1 ease-in duration-100"
           onClick={() => {
-            router.replace("/login", { scroll: true });
-            router.prefetch("/signup");
+            if(context.User){
+              router.push("/tasks");
+              router.prefetch("/tasks/:id");
+              router.prefetch("/tasks/list");
+            }else{
+              router.push("/login", { scroll: true });
+              router.prefetch("/signup");
+            }
           }}
           transition={{ duration: 0.08, ease: [0.15, 1.2, 0.4, 1] }}
         >
-          Get Started &gt;
+          {context.User?"Manage Tasks":"Get Started >"}
         </motion.button>
         <motion.button
           variants={childVariants}
           className="px-4 py-3 md:px-5 md:py-4 bg-linear-to-br focus:bg-white hover:bg-gray-300/80 from-gray-300 via-gray-300/80 to-gray-300 cursor-pointer text-black font-bold text-md md:text-lg border border-amber-50 outline-2 outline-amber-50 outline-offset-3 rounded-lg hover:-translate-y-1 ease-in duration-100"
           transition={{ duration: 0.07, ease: [0.2, 1.35, 0.35, 1.1] }}
+          onClick={()=>{
+            if(context.User){
+              router.push("/tasks/list");
+              router.prefetch("/tasks/:id");
+              router.prefetch("/tasks");
+            }else{
+              router.push("/tasks/:id");
+            }
+          }}
         >
-          Set Tasks For a Day
+          {context.User?"View Pending Tasks":"Set Tasks For a Day"}
         </motion.button>
       </motion.div>
     </>

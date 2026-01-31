@@ -2,45 +2,93 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import {loginSchema} from "@/schemas/loginSchema";
-import {motion,AnimatePresence} from "framer-motion";
+import { loginSchema } from "@/schemas/loginSchema";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/app/contexts/authContext";
+import { TailSpin } from "react-loader-spinner";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
-  const [emailError,setEmailError]=useState<boolean | string>("");
-  const [emailErr,setEmailErr] = useState<string>("");
-  const [passwordError,setPasswordError]= useState<boolean | string>("");
-  const [passwordErr,setPasswordErr] = useState<string>("");
+  const [emailError, setEmailError] = useState<boolean | string>("");
+  const [emailErr, setEmailErr] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<boolean | string>("");
+  const [passwordErr, setPasswordErr] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const { signin } = useAuth();
+  const router = useRouter();
 
   function emailValidation() {
     const res = loginSchema.shape.email.safeParse(email);
-    if(!res.success){
+    if (!res.success) {
       setEmailError(true);
       setEmailErr(res.error.issues[0].message);
-    }else{
+    } else {
       setEmailError(false);
     }
   }
 
   function passwordValidation() {
     const res = loginSchema.shape.password.safeParse(password);
-    if(!res.success){
+    if (!res.success) {
       setPasswordError(true);
       setPasswordErr(res.error.issues[0].message);
-    }else{
+    } else {
       setPasswordError(false);
     }
   }
 
-  function loginHandler() {
-    const res = loginSchema.safeParse({email,password});
-    if(!res.success){
+  async function loginHandler() {
+    const res = loginSchema.safeParse({ email, password });
+    if (!res.success) {
+      const emailInvalid = res.error.issues.find(
+        (issue) => issue.path[0] === "email",
+      );
+      const passwordInvalid = res.error.issues.find(
+        (issue) => issue.path[0] == "password",
+      );
+      if (emailInvalid) {
+        setEmailError(true);
+        setEmailErr(emailInvalid.message);
+      }
+      if (passwordInvalid) {
+        setPasswordError(true);
+        setPasswordErr(passwordInvalid.message);
+      }
+      return;
+    } else {
+      setEmailError(false);
+      setPasswordError(false);
     }
-    try{
-    }catch(err:any){
+    setLoading(true);
+    try {
+      const res = await signin({ email, password });
+      setLoading(false);
+      if (res.message) {
+        if (res.message == "Bad Request . All credentials are required.") {
+          toast.warning("All fields are required.",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+        } else if (res.message == "User does not exist") {
+          toast.error("The Account is not registered!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+        } else if (res.message == "Invalid credentials") {
+          toast.error("Invalid Password!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+        } else {
+          toast.error("Server side error occurred.",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+        }
+      } else {
+        toast.success("Logged in!",{style:{backgroundColor:"green",borderBlockColor:"white",color:"black"}});
+        setTimeout(() => {
+          router.push("/profile/dashboard", { scroll: true });
+          router.prefetch("/profile/settings");
+        }, 3000);
+      }
+    } catch (err: any) {
+      setLoading(false);
+      toast.error("Something went wrong , please try again!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
     }
   }
+
   return (
     <>
       <div className="min-h-screen min-w-screen flex justify-center items-center">
@@ -69,7 +117,7 @@ export default function Login() {
             <input
               id="email"
               type="email"
-              className={`mt-2 px-5 py-[10px] max-md:py-[8px] max-md:px-3 w-[500px] max-md:w-[295px] border ${emailError===true?"border-red-600":emailError===false?"border-green-500":"border-gray-400"} rounded-lg bg-black placeholder:font-serif font-serif`}
+              className={`mt-2 px-5 py-[10px] max-md:py-[8px] max-md:px-3 w-[500px] max-md:w-[295px] border ${emailError === true ? "border-red-600" : emailError === false ? "border-green-500" : "border-gray-400"} rounded-lg bg-black placeholder:font-serif font-serif`}
               placeholder="Email*"
               onBlur={emailValidation}
               value={email}
@@ -77,8 +125,15 @@ export default function Login() {
               autoComplete="off"
             />
             <AnimatePresence>
-              {(emailError && emailErr) && (
-                <motion.p initial={{y:-15,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-15,opacity:0}} className="text-red-700 font-serif mt-2">{emailErr}</motion.p>
+              {emailError && emailErr && (
+                <motion.p
+                  initial={{ y: -15, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -15, opacity: 0 }}
+                  className="text-red-700 font-serif mt-2"
+                >
+                  {emailErr}
+                </motion.p>
               )}
             </AnimatePresence>
           </div>
@@ -94,7 +149,7 @@ export default function Login() {
               <input
                 id="password"
                 type="password"
-                className={`mt-2 px-5 py-[10px] max-md:py-[8px] max-md:px-3 w-[500px] max-md:w-[295px] border ${passwordError===true?"border-red-600":passwordError===false?"border-green-500":"border-gray-400"} rounded-lg bg-black placeholder:font-serif font-serif`}
+                className={`mt-2 px-5 py-[10px] max-md:py-[8px] max-md:px-3 w-[500px] max-md:w-[295px] border ${passwordError === true ? "border-red-600" : passwordError === false ? "border-green-500" : "border-gray-400"} rounded-lg bg-black placeholder:font-serif font-serif`}
                 placeholder="Password*"
                 onBlur={passwordValidation}
                 value={password}
@@ -103,8 +158,15 @@ export default function Login() {
               />
             </div>
             <AnimatePresence>
-              {(passwordError && passwordErr) && (
-                <motion.p initial={{y:-15,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-15,opacity:0}} className="text-red-700 font-serif mt-2">{passwordErr}</motion.p>
+              {passwordError && passwordErr && (
+                <motion.p
+                  initial={{ y: -15, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -15, opacity: 0 }}
+                  className="text-red-700 font-serif mt-2"
+                >
+                  {passwordErr}
+                </motion.p>
               )}
             </AnimatePresence>
           </div>
@@ -123,10 +185,21 @@ export default function Login() {
           </div>
           <div className="w-full h-fit flex justify-center md:mt-6 max-md:mt-8">
             <button
-              className="cursor-pointer w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-red-600 focus:bg-red-500 hover:bg-red-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black"
+              className="cursor-pointer relative w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-red-600 focus:bg-red-500 hover:bg-red-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black"
               onMouseDown={loginHandler}
             >
-              Login
+              {loading ? (
+                <div className="w-full h-full absolute flex justify-center items-center">
+                  <TailSpin
+                    width={19}
+                    height={19}
+                    strokeWidth={6}
+                    color="#ffffff"
+                  />
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </fieldset>

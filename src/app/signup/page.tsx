@@ -1,19 +1,27 @@
 "use client";
+
 import Link from "next/link";
 import { useState } from "react";
 import { signupSchema } from "@/schemas/signupSchema";
 import { motion, AnimatePresence } from "framer-motion";
+import {useAuth} from "@/app/contexts/authContext";
+import {TailSpin} from "react-loader-spinner";
+import {useRouter} from "next/navigation"
+import {toast} from "react-toastify";
 
 export default function Signup() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading,setLoading] = useState<boolean>(false);
+  const router = useRouter();
   const [nameError, setNameError] = useState<boolean | string>("");
   const [nameErr, setNameErr] = useState<string>("");
   const [emailError, setEmailError] = useState<boolean | string>("");
   const [emailErr, setEmailErr] = useState<string>("");
   const [passwordError, setPasswordError] = useState<boolean | string>("");
   const [passwordErr, setPasswordErr] = useState<string>("");
+  const {register} = useAuth();
 
   function nameValidation() {
     const res = signupSchema.shape.name.safeParse(name);
@@ -48,9 +56,50 @@ export default function Signup() {
   async function signUpHandler() {
     const res = signupSchema.safeParse({ name, email, password });
     if (!res.success) {
+      const nameInvalid = res.error.issues.find((issue)=>issue.path[0]=="name");
+      const emailInvalid = res.error.issues.find((issue)=>issue.path[0]=="email");
+      const passwordInvalid = res.error.issues.find((issue)=>issue.path[0]=="password");
+      if(nameInvalid){
+        setNameError(true);
+        setNameErr(nameInvalid.message);
+      } 
+      if(emailInvalid){
+        setEmailError(true);
+        setEmailErr(emailInvalid.message);
+      }
+      if(passwordInvalid){
+        setPasswordError(true);
+        setPasswordErr(passwordInvalid.message);
+      }
+      return;
+    }else{
+      setNameError(false);
+      setEmailError(false);
+      setPasswordError(false);
     }
+    setLoading(true);
     try {
-    } catch (err: any) {}
+      const res = await register({name,email,password});
+      setLoading(false);
+      if(res.message){
+        if(res.message=="Bad request. All credentials required."){
+          toast.warning("Fill in all the fields!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+        }else if(res.message=="Account already registered."){
+          toast.error("Account exists with this email-id!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+        }else{
+          toast.error("Server side error occurred.",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+        }
+      }else{
+        toast.success("Registered Successfully!",{style:{backgroundColor:"green",borderBlockColor:"white",color:"black"}});
+        setTimeout(()=>{
+          router.push("/profile/dashboard",{scroll:true});
+          router.prefetch("/profile/settings");
+        },3000);
+      }
+    } catch (err: any) {
+      setLoading(false);
+      toast.error("Something went wrong , please try again!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+    }
   }
   return (
     <>
@@ -184,10 +233,10 @@ export default function Signup() {
           </div>
           <div className="w-full h-fit flex justify-center md:mt-6 max-md:mt-8">
             <button
-              className="cursor-pointer w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-red-600 focus:bg-red-500 hover:bg-red-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black"
+              className="cursor-pointer relative w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-red-600 focus:bg-red-500 hover:bg-red-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black"
               onMouseDown={signUpHandler}
             >
-              Signup
+              {loading?(<div className="w-full h-full absolute bg-transparent flex justify-center items-center"><TailSpin height={19} width={19} strokeWidth={6} color="#ffffff"/></div>):"Signup"}
             </button>
           </div>
         </fieldset>

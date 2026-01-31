@@ -1,9 +1,17 @@
 import {NextResponse,NextRequest} from "next/server";
+import jwt from "jsonwebtoken";
 
 export async function GET(req:NextRequest){
-    const token = req.headers.get("token");
-    if(token){
-        NextResponse.next().cookies.delete("token");
+    const token = req.cookies.get("token");
+    if(!token){
+        return NextResponse.json({message:"No token provided"},{status:401});
     }
-    return NextResponse.json({message:"Session deleted"},{status:200});
+
+    try{
+        const id : any = jwt.verify(token.value,process.env.JWT_SECRET!);
+        NextResponse.next().cookies.delete("token");
+        return NextResponse.json({message:"Session deleted",user:{id:id}},{status:200});
+    }catch(err:any){
+        return NextResponse.json({message:"Invalid or expired token"},{status:401});
+    }
 }
