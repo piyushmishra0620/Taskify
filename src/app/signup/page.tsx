@@ -8,7 +8,7 @@ import {useAuth} from "@/app/contexts/authContext";
 import {TailSpin} from "react-loader-spinner";
 import {useRouter} from "next/navigation"
 import {toast} from "react-toastify";
-
+                                      
 export default function Signup() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -83,22 +83,22 @@ export default function Signup() {
       setLoading(false);
       if(res.message){
         if(res.message=="Bad request. All credentials required."){
-          toast.warning("Fill in all the fields!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+          toast.warning("Fill in all the fields!",{style:{backgroundColor:"black",border:"solid 1px white",color:"red"}});
         }else if(res.message=="Account already registered."){
-          toast.error("Account exists with this email-id!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+          toast.error("Account exists with this email-id!",{style:{backgroundColor:"black",border:"solid 1px white",color:"red"}});
         }else{
-          toast.error("Server side error occurred.",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+          toast.error("Server side error occurred.",{style:{backgroundColor:"black",border:"solid 1px white",color:"red"}});
         }
       }else{
-        toast.success("Registered Successfully!",{style:{backgroundColor:"green",borderBlockColor:"white",color:"black"}});
+        toast.success("Registered Successfully!",{style:{backgroundColor:"black",border:"solid 1px white",color:"green"}});
         setTimeout(()=>{
           router.push("/profile/dashboard",{scroll:true});
           router.prefetch("/profile/settings");
-        },3000);
+        },6000);
       }
     } catch (err: any) {
       setLoading(false);
-      toast.error("Something went wrong , please try again!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+      toast.error("Something went wrong , please try again!",{style:{backgroundColor:"black",border:"solid 1px white",color:"red"}});
     }
   }
   return (
@@ -236,7 +236,7 @@ export default function Signup() {
               className="cursor-pointer relative w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-red-600 focus:bg-red-500 hover:bg-red-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black"
               onMouseDown={signUpHandler}
             >
-              {loading?(<div className="w-full h-full absolute bg-transparent flex justify-center items-center"><TailSpin height={19} width={19} strokeWidth={6} color="#ffffff"/></div>):"Signup"}
+              {loading?(<div className="absolute inset-0 bg-transparent flex justify-center items-center"><TailSpin height={25} width={25} strokeWidth={6} color="#ffffff"/></div>):"Signup"}
             </button>
           </div>
         </fieldset>

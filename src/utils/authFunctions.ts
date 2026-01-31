@@ -24,7 +24,7 @@ export async function getUser(){
     try{
         const response = await api.get("/auth/getUser");
         if(response.status==200){
-            return response.data;
+            return  {data:response.data};
         }
     }catch(err:any){
         console.error(err);

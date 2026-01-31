@@ -45,8 +45,8 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
     useEffect(()=>{
         const session = async ()=>{
             const response = await getUser();
-            if(response.data){
-                dispatch({type:"setUser",user:{name:response.data.name,email:response.data.email}});
+            if(response.data?.user){
+                dispatch({type:"setUser",user:response.data?.user});
                 dispatch({type:"setLoading",loading:false});
                 dispatch({type:"setIsAuthenticated",isAuthenticated:true});
             }
@@ -68,7 +68,7 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
                 }else if(response.error=="User already exists"){
                     return {message:"Account already registered."}
                 }else{
-                    return {error:"Server side error occurred."}
+                    return {message:"Server side error occurred."}
                 }
             }
         }catch(err:any){
@@ -93,7 +93,7 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
                 }else if(response.error=="Invalid credentials"){
                     return {message:"Incorrect Password"}
                 }else{
-                    return {error:"Server side error occurred."}
+                    return {message:"Server side error occurred."}
                 }
             }
         }catch(err:any){

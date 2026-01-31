@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import {useRouter} from "next/navigation";
 import { Hero } from "@/components/Hero";
 import { Card } from "@/components/card";
 import Footer from "@/components/Footer";
@@ -17,6 +18,8 @@ import {
 import { useAuth } from "@/app/contexts/authContext";
 
 export default function Home() {
+  const {context} = useAuth();
+  const router = useRouter();
   const buttonContainer = useRef(null);
   const gridContainer = useRef(null);
   return (
@@ -99,12 +102,12 @@ export default function Home() {
       <div className="mt-6 md:mt-9 z-40 w-full flex justify-center">
         <div className="w-fit h-fit bg-linear-to-tr bg-clip-text from-0% from-gray-50 via-55% via-gray-500 to-85% to-gray-50">
           <h1 className="text-[20px] [@media(min-width:781px)]:text-[35px] [@media(min-width:921px)]:text-[50px] text-transparent text-center tracking-tighter font-extrabold cursor-default">
-            Login to experience best features
+            {context.User?"View Analytics":"Login To Experience Best Features"}
           </h1>
         </div>
       </div>
       <p className="mt-[9px] text-center z-40 text-[15.7px] tracking-tighter md:text-[24px] font-serif text-neutral-400">
-        Join Thousands who get their schedule organised and planned!
+        {context.User?"Analyze your performance and check schedules!":"Join Thousands who get their schedule organised and planned!"}
       </p>
       <div
         ref={buttonContainer}
@@ -116,8 +119,18 @@ export default function Home() {
           viewport={{ once: true, amount: 0.4, root: buttonContainer }}
           transition={{ duration: 0.09, ease: "easeOut" }}
           className="px-12 md:px-25 py-1.5 md:py-4 outline-2 outline-white outline-offset-1 md:outline-offset-3 bg-red-500  md:bg-red-700 cursor-pointer text-black rounded-lg font-semibold text-[20px] hover:-translate-y-1 ease-in duration-100 hover:bg-neutral-900/60 hover:backdrop-blur-sm hover:text-white"
+          onClick={()=>{
+            if(context.User){
+              router.push("/tasks",{scroll:true});
+              router.prefetch("/tasks/:id");
+              router.prefetch("tasks/list");
+            }else{
+              router.push("/signup",{scroll:true});
+              router.prefetch("/login");
+            }
+          }}
         >
-          Signup
+          {context.User?"View Analytics":"Signup"}
         </motion.button>
         <motion.button
           initial={{ x: 80, opacity: 0 }}
@@ -125,8 +138,15 @@ export default function Home() {
           viewport={{ once: true, amount: 0.4, root: buttonContainer }}
           transition={{ duration: 0.09, ease: "easeOut" }}
           className="px-12 md:px-25 py-1.5 md:py-4 outline-2 outline-white outline-offset-1 md:outline-offset-3 bg-red-500 md:bg-red-700 cursor-pointer text-black rounded-lg font-semibold text-[20px] hover:-translate-y-1 hover:text-white hover:bg-neutral-900/60 hover:backdrop-blur-sm ease-in duration-100"
+          onClick={()=>{if(context.User){
+            router.push("/profile/dashboard");
+            router.prefetch("/profile/settings");
+          }else{
+            router.push("/login",{scroll:true});
+            router.prefetch("/signup");
+          }}}
         >
-          Signin
+          {context.User?"View Dashboard":"SignIn"}
         </motion.button>
       </div>
       <div className="w-full h-[1px] bg-linear-to-r from-neutral-400 via-red-600 to-neutral-400 mt-12 md:mt-18 mb-3 md:mb-5"></div>

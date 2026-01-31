@@ -40,7 +40,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <Navbar />
-          <ToastContainer position="top-center" autoClose={3000} transition={Bounce}/>
+          <ToastContainer position="top-center" autoClose={6000} transition={Bounce}/>
           {children}
           <Footer />
         </AuthProvider>

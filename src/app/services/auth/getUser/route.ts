@@ -1,21 +1,27 @@
 import {NextRequest,NextResponse} from "next/server";
 import {ObjectId} from "mongodb";
 import {Users} from "@/lib/schema";
+import jwt from "jsonwebtoken";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req:NextRequest){
-    const userId = req.headers.get("x-user-id");
-    if(!userId){
-        return NextResponse.json({error:"Bad request"},{status:400});
+    const token = req.cookies.get("token");
+    if(!token){
+        return NextResponse.json({error:"Unauthorised Access"},{status:401});
     }
     try{
-        const user = await Users.find({_id:new ObjectId(userId)}).toArray();
+        const decoded : any = jwt.verify(token.value,process.env.JWT_SECRET!);
+        if(!decoded){
+            return NextResponse.json({error:"Invalid User , trying to access the wrong token!"},{status:401});
+        }
+        const userId = decoded.id;
+        const user = await Users.findOne({_id:new ObjectId(userId)});
         if(!user){
             return NextResponse.json({error:"User not found"},{status:404});
         }
-        const name = user[0].name;
-        const email = user[0].email;
+        const name = user.name;
+        const email = user.email;
         return NextResponse.json({message:"User found!",user:{name:name,email:email}},{status:200});
     }catch(err:any){
         console.error(err);

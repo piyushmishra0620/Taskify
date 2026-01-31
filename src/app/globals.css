@@ -37,3 +37,33 @@ input:-webkit-autofill:focus {
   font-size:16px;
   font-family:serif;
 }
+
+
+.Toastify__close-button {
+  color: #ffffff !important;
+  background: rgba(0,0,0,0.25) !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+/* Force SVG/icon color */
+.Toastify__close-button svg,
+.Toastify__close-button svg path,
+.Toastify__close-button > svg {
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Hover / focus states */
+.Toastify__close-button:hover,
+.Toastify__close-button:focus {
+  background: rgba(255,255,255,0.08) !important;
+  border-radius:50%;
+  outline: none !important;
+}

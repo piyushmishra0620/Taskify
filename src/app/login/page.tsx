@@ -68,24 +68,24 @@ export default function Login() {
       setLoading(false);
       if (res.message) {
         if (res.message == "Bad Request . All credentials are required.") {
-          toast.warning("All fields are required.",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
-        } else if (res.message == "User does not exist") {
-          toast.error("The Account is not registered!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
-        } else if (res.message == "Invalid credentials") {
-          toast.error("Invalid Password!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+          toast.warning("All fields are required.",{style:{backgroundColor:"black",border:"solid 1px white",color:"red"}});
+        } else if (res.message == "Email not registered.") {
+          toast.error("The Account is not registered!",{style:{backgroundColor:"black",border:"solid 1px white",color:"red"}});
+        } else if (res.message == "Incorrect Password") {
+          toast.error("Invalid Password!",{style:{backgroundColor:"black",border:"solid 1px white",color:"red"}});
         } else {
-          toast.error("Server side error occurred.",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+          toast.error("Server side error occurred.",{style:{backgroundColor:"black",border:"solid 1px white",color:"red"}});
         }
       } else {
-        toast.success("Logged in!",{style:{backgroundColor:"green",borderBlockColor:"white",color:"black"}});
+        toast.success("Logged in!",{style:{backgroundColor:"black",border:"solid 1px white",color:"green"}});
         setTimeout(() => {
           router.push("/profile/dashboard", { scroll: true });
           router.prefetch("/profile/settings");
-        }, 3000);
+        }, 6000);
       }
     } catch (err: any) {
       setLoading(false);
-      toast.error("Something went wrong , please try again!",{style:{backgroundColor:"red",borderBlockColor:"white",color:"black"}});
+      toast.error("Something went wrong , please try again!",{style:{backgroundColor:"black",border:"solid 1px white",color:"red"}});
     }
   }
 
@@ -186,13 +186,13 @@ export default function Login() {
           <div className="w-full h-fit flex justify-center md:mt-6 max-md:mt-8">
             <button
               className="cursor-pointer relative w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-red-600 focus:bg-red-500 hover:bg-red-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black"
-              onMouseDown={loginHandler}
+              onClick={loginHandler}
             >
               {loading ? (
-                <div className="w-full h-full absolute flex justify-center items-center">
+                <div className=" absolute inset-0 flex justify-center items-center">
                   <TailSpin
-                    width={19}
-                    height={19}
+                    width={25}
+                    height={25}
                     strokeWidth={6}
                     color="#ffffff"
                   />
