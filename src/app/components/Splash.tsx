@@ -32,7 +32,7 @@ export default function SplashScreen() {
                   exit={{ opacity: 0, y: -25 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <Image src="/todoIcon.png" alt="Icon" width={160} height={160} priority />
+                  <Image src="/Icon.png" alt="Icon" width={160} height={160} priority />
                 </motion.div>
               ) : (
                 <motion.div
