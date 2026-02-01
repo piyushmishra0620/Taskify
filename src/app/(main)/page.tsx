@@ -3,9 +3,9 @@
 import { useRef } from "react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
-import { Hero } from "@/components/Hero";
-import { Card } from "@/components/card";
-import Footer from "@/components/Footer";
+import { Hero } from "@/app/(main)/components/Hero";
+import { Card } from "@/app/(main)/components/card";
+import Footer from "@/app/(main)/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ListChecks,
