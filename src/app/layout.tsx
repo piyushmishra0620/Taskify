@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/app/(main)/components/Navbar";
-import Footer from "@/app/(main)/components/Footer";
+import Navbar from "@/app/components/Navbar";
+import Footer from "@/app/components/Footer";
 import { AuthProvider } from "@/app/contexts/authContext";
 import "react-toastify/dist/ReactToastify.css";
 import {ToastContainer,Bounce} from "react-toastify";
@@ -39,10 +39,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <Navbar />
-          <ToastContainer position="top-center" autoClose={6000} transition={Bounce}/>
+          <Navbar/>
+          <ToastContainer position="top-center" transition={Bounce} autoClose={6000} />
           {children}
-          <Footer />
+          <Footer/>
         </AuthProvider>
       </body>
     </html>

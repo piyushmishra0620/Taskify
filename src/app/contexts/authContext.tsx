@@ -3,6 +3,7 @@
 import {createContext,useContext,useReducer,useEffect} from "react";
 import {signup,login,getUser,logout} from "@/utils/authFunctions";
 import {NextResponse} from "next/server";
+import SplashScreen from "@/app/components/Splash";
 
 interface User{
     name:string,
@@ -47,11 +48,15 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
             const response = await getUser();
             if(response.data?.user){
                 dispatch({type:"setUser",user:response.data?.user});
-                dispatch({type:"setLoading",loading:false});
                 dispatch({type:"setIsAuthenticated",isAuthenticated:true});
             }
+            else{
+                dispatch({type:"setUser",user:null});
+                dispatch({type:"setIsAuthenticated",isAuthenticated:false});
+            }
+            dispatch({type:"setLoading",loading:false});
         }
-        session();
+        setTimeout(()=>session(),10000);
     },[]);
 
     const register = async (body:{name:string,email:string,password:string})=>{
@@ -118,6 +123,12 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
             console.error(err);
             return NextResponse.json({error:err.message},{status:500});
         }
+    }
+
+    if((context.loading)){
+        return(
+            <SplashScreen/>
+        )
     }
 
     return (
