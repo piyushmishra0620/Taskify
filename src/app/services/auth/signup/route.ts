@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { Users } from "@/lib/schema";
+import { Users } from "@/lib/dbSchemas/user";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {

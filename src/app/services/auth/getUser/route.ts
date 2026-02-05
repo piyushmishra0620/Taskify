@@ -1,6 +1,6 @@
 import {NextRequest,NextResponse} from "next/server";
 import {ObjectId} from "mongodb";
-import {Users} from "@/lib/schema";
+import {Users} from "@/lib/dbSchemas/user";
 import jwt from "jsonwebtoken";
 
 export const dynamic = 'force-dynamic';
