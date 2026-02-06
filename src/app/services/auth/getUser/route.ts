@@ -22,7 +22,7 @@ export async function GET(req:NextRequest){
         }
         const name = user.name;
         const email = user.email;
-        return NextResponse.json({message:"User found!",user:{name:name,email:email}},{status:200});
+        return NextResponse.json({message:"User found!",user:{name:name,email:email,id:user._id}},{status:200});
     }catch(err:any){
         console.error(err);
         return NextResponse.json({error:"Server side error"},{status:500});
